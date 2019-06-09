@@ -13,7 +13,6 @@ from PyQt5.QtCore import (
     QRectF,
     Qt,
     QPointF,
-    QVariant,
 )
 from PyQt5.QtGui import (
     QPainter,
@@ -23,6 +22,8 @@ from PyQt5.QtGui import (
     QFont,
     QPainterPath,
 )
+
+from utils.decorators import overrides
 
 
 def snap_to_grid(grid_size, new_position: QPointF) -> QPointF:
@@ -55,15 +56,15 @@ class Defaults:
 
     BOUNDING_RECT = QRectF(
         -OUTLINE_WIDTH / 2,
-        TOP_TEXT_BOUNDING_RECT.top(),
+        -TOP_TEXT_BOUNDING_RECT.height(),
         RECT_WIDTH + OUTLINE_WIDTH,
-        OUTLINE_WIDTH / 2 + RECT_WIDTH
+        OUTLINE_WIDTH / 2 + RECT_WIDTH + TOP_TEXT_BOUNDING_RECT.height()
     )
     COLLISION_SHAPE = QRectF(
         -OUTLINE_WIDTH / 2,
         -OUTLINE_WIDTH / 2,
-        RECT_WIDTH + OUTLINE_WIDTH,
-        RECT_WIDTH + OUTLINE_WIDTH
+        OUTLINE_WIDTH + RECT_WIDTH,
+        OUTLINE_WIDTH + RECT_WIDTH
     )
     PEN = QPen(
         OUTLINE_COLOR,
@@ -98,6 +99,10 @@ class ComponentView(QGraphicsItem):
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setFlag(QGraphicsItem.ItemSendsGeometryChanges)
 
+    def _change_color(self, *args):
+        self.color = next(self.colors)
+
+    @overrides(QGraphicsItem)
     def boundingRect(self) -> QRectF:
         """
         Rectangular bounding area that needs updates (repaints)
@@ -107,6 +112,7 @@ class ComponentView(QGraphicsItem):
         """
         return Defaults.BOUNDING_RECT
 
+    @overrides(QGraphicsItem)
     def shape(self) -> QPainterPath:
         """
         Component's shape, used for collision detection (e.g. selecting, moving)
@@ -118,6 +124,7 @@ class ComponentView(QGraphicsItem):
         path.addRect(Defaults.COLLISION_SHAPE)
         return path
 
+    @overrides(QGraphicsItem)
     def paint(self,
               painter: QPainter,
               option: QStyleOptionGraphicsItem,
@@ -137,6 +144,7 @@ class ComponentView(QGraphicsItem):
 
         self.scene().update()
 
+    @overrides(QGraphicsItem)
     def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: Union[QPointF]) -> Any:
         """
         Handle component's view changes. Snap to grid in case of item position change.
