@@ -1,14 +1,19 @@
 from typing import (
     Optional,
+    Any,
+    Union,
 )
 from PyQt5.QtWidgets import (
     QGraphicsItem,
     QStyleOptionGraphicsItem,
     QWidget,
+    QApplication,
 )
 from PyQt5.QtCore import (
     QRectF,
     Qt,
+    QPointF,
+    QVariant,
 )
 from PyQt5.QtGui import (
     QPainter,
@@ -18,6 +23,13 @@ from PyQt5.QtGui import (
     QFont,
     QPainterPath,
 )
+
+
+def snap_to_grid(grid_size, new_position: QPointF) -> QPointF:
+    return QPointF(
+        round(new_position.x() / grid_size) * grid_size,
+        round(new_position.y() / grid_size) * grid_size,
+    )
 
 
 class Defaults:
@@ -84,6 +96,7 @@ class ComponentView(QGraphicsItem):
 
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setFlag(QGraphicsItem.ItemIsSelectable)
+        self.setFlag(QGraphicsItem.ItemSendsGeometryChanges)
 
     def boundingRect(self) -> QRectF:
         """
@@ -123,6 +136,26 @@ class ComponentView(QGraphicsItem):
         self._paint_text(level_of_detail, painter)
 
         self.scene().update()
+
+    def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: Union[QPointF]) -> Any:
+        """
+        Handle component's view changes. Snap to grid in case of item position change.
+
+        Args:
+            change: Item change type
+            value: Value of the change
+
+        Returns:
+            Changed value
+        """
+        if change == QGraphicsItem.ItemPositionChange:
+            new_position: QPointF = value
+            if QApplication.mouseButtons() == Qt.LeftButton:
+                return snap_to_grid(grid_size=25, new_position=new_position)
+            else:
+                return new_position
+        else:
+            return super().itemChange(change, value)
 
     def _paint_text(self, level_of_detail: float, painter: QPainter) -> None:
         """

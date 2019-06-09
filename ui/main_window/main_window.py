@@ -59,6 +59,10 @@ class MainWindow(QMainWindow):
                 file=Actions.File(
                     new_file=action.build(text='New file', shortcut='Ctrl+N'),
                     exit_app=action.build(text='Quit', shortcut='Ctrl+Q')
+                ),
+                edit=Actions.Edit(
+                    undo=action.build(text='Undo', shortcut='Ctrl+Z'),
+                    redo=action.build(text='Redo', shortcut='Ctrl+Shift+Z'),
                 )
             )
             return actions
@@ -67,12 +71,13 @@ class MainWindow(QMainWindow):
         """ Add actions to menus in the menu bar """
 
         file_menu = self._menus.file
-        file_menu.addAction(actions.file.new_file)
-        file_menu.addAction(actions.file.exit_app)
+        file_menu.addActions(actions.file.all())
+
+        edit_menu = self._menus.edit
+        edit_menu.addActions(actions.edit.all())
+
         # obj = QObject()
         # obj.installEventFilter()
-
-
 # def from_event(qobject: QObject, type_: QEvent.Type) -> Observable[QEvent]:
 #     if not qobject:
 #         return never()
