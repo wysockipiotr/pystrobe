@@ -16,17 +16,27 @@ class GetAllActionsMixin:
 class Actions:
     @dataclass()
     class File(GetAllActionsMixin):
-        new_file: QAction
-        exit_app: QAction
+        new: QAction
+        open: QAction
+        save: QAction
+        save_as: QAction
+        exit: QAction
 
     @dataclass()
     class Edit(GetAllActionsMixin):
         undo: QAction
         redo: QAction
+        cut: QAction
+        copy: QAction
+        duplicate: QAction
+        paste: QAction
 
     @dataclass()
     class Insert(GetAllActionsMixin):
-        ...
+        wire: QAction
+        input: QAction
+        output: QAction
+        clock: QAction
 
     @dataclass()
     class View(GetAllActionsMixin):

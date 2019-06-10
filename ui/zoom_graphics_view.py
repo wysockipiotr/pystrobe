@@ -23,6 +23,10 @@ from core import (
 )
 
 
+class Qwerty(QGraphicsView):
+    ...
+
+
 class ZoomGraphicsView(QGraphicsView):
     def __init__(self, parent: QWidget = None):
         super().__init__(parent)
@@ -30,7 +34,8 @@ class ZoomGraphicsView(QGraphicsView):
         self.setDragMode(QGraphicsView.RubberBandDrag)
         self.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
-        self.setViewportUpdateMode(QGraphicsView.SmartViewportUpdate)
+        self.setCacheMode(QGraphicsView.CacheBackground)
+        self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
 
         self.setScene(Scene())
 

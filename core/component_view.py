@@ -142,7 +142,7 @@ class ComponentView(QGraphicsItem):
         self._paint_rect(painter)
         self._paint_text(level_of_detail, painter)
 
-        self.scene().update()
+        # self.scene().update()
 
     @overrides(QGraphicsItem)
     def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: Union[QPointF]) -> Any:

@@ -57,12 +57,19 @@ class MainWindow(QMainWindow):
         with ActionBuilder(parent=self) as action:
             actions = Actions(
                 file=Actions.File(
-                    new_file=action.build(text='New file', shortcut='Ctrl+N'),
-                    exit_app=action.build(text='Quit', shortcut='Ctrl+Q')
+                    new=action.build(text='New file', shortcut='Ctrl+N'),
+                    open=action.build(text='Open file', shortcut='Ctrl+O'),
+                    save=action.build(text='Save', shortcut='Ctrl+S'),
+                    save_as=action.build(text='Save as...', shortcut='Ctrl+Shift+S'),
+                    exit=action.build(text='Quit', shortcut='Ctrl+Q')
                 ),
                 edit=Actions.Edit(
                     undo=action.build(text='Undo', shortcut='Ctrl+Z'),
                     redo=action.build(text='Redo', shortcut='Ctrl+Shift+Z'),
+                    cut=action.build(text='Cut', shortcut='Ctrl+X'),
+                    copy=action.build(text='Copy', shortcut='Ctrl+C'),
+                    paste=action.build(text='Paste', shortcut='Ctrl+V'),
+                    duplicate=action.build(text='Duplicate', shortcut='Ctrl+D'),
                 )
             )
             return actions
@@ -70,11 +77,33 @@ class MainWindow(QMainWindow):
     def _populate_menus(self, actions: Actions) -> None:
         """ Add actions to menus in the menu bar """
 
+        # file
         file_menu = self._menus.file
-        file_menu.addActions(actions.file.all())
+        file_actions = actions.file
+        file_menu.addActions((
+            file_actions.new,
+            file_actions.open,
+            file_actions.save,
+            file_actions.save_as,
+        ))
+        file_menu.addSeparator()
+        file_menu.addAction(file_actions.exit)
 
+        # edit
         edit_menu = self._menus.edit
-        edit_menu.addActions(actions.edit.all())
+        edit_actions = actions.edit
+        edit_menu.addActions((
+            edit_actions.undo,
+            edit_actions.redo,
+        ))
+        edit_menu.addSeparator()
+        edit_menu.addActions((
+            edit_actions.cut,
+            edit_actions.copy,
+            edit_actions.paste,
+            edit_actions.duplicate,
+        ))
+
 
         # obj = QObject()
         # obj.installEventFilter()
