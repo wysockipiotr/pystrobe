@@ -99,6 +99,9 @@ class ComponentView(QGraphicsItem):
         self.setFlag(QGraphicsItem.ItemIsSelectable)
         self.setFlag(QGraphicsItem.ItemSendsGeometryChanges)
 
+        self._number_of_inputs = 3
+        self._number_of_outputs = 1
+
     def _change_color(self, *args):
         self.color = next(self.colors)
 
@@ -142,6 +145,18 @@ class ComponentView(QGraphicsItem):
         self._paint_rect(painter)
         self._paint_text(level_of_detail, painter)
 
+        # painter.drawLine(0, 25, -25, 25)
+        painter.setBrush(Defaults.HIGHLIGHT_COLOR if self.isSelected() else Qt.black)
+        for i in range(self._number_of_inputs):
+            offset = (i + 1) * 25
+            painter.drawLine(0, offset, -25, offset)
+            painter.drawEllipse(QPointF(-25, offset), Defaults.OUTLINE_WIDTH, Defaults.OUTLINE_WIDTH)
+
+        for i in range(self._number_of_outputs):
+            offset = (i + 1) * 25
+            painter.drawLine(Defaults.RECT_WIDTH, offset, Defaults.RECT_WIDTH + 25, offset)
+            painter.drawEllipse(QPointF(Defaults.RECT_WIDTH + 25, offset), Defaults.OUTLINE_WIDTH,
+                                Defaults.OUTLINE_WIDTH)
         # self.scene().update()
 
     @overrides(QGraphicsItem)

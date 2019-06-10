@@ -34,7 +34,7 @@ class ZoomGraphicsView(QGraphicsView):
         self.setDragMode(QGraphicsView.RubberBandDrag)
         self.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
-        self.setCacheMode(QGraphicsView.CacheBackground)
+        # self.setCacheMode(QGraphicsView.CacheBackground)
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
 
         self.setScene(Scene())
