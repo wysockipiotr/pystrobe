@@ -1,27 +1,13 @@
-from typing import (
-    Optional,
-    Any,
-    Union,
-)
+from typing import Optional, Any, Union
+
 from PyQt5.QtWidgets import (
     QGraphicsItem,
     QStyleOptionGraphicsItem,
     QWidget,
     QApplication,
 )
-from PyQt5.QtCore import (
-    QRectF,
-    Qt,
-    QPointF,
-)
-from PyQt5.QtGui import (
-    QPainter,
-    QBrush,
-    QPen,
-    QColor,
-    QFont,
-    QPainterPath,
-)
+from PyQt5.QtCore import QRectF, Qt, QPointF
+from PyQt5.QtGui import QPainter, QBrush, QPen, QColor, QFont, QPainterPath
 
 from utils.decorators import overrides
 
@@ -41,16 +27,13 @@ class Defaults:
 
     RECT_WIDTH = 100
 
-    FONT_FACE = 'Roboto Mono'
+    FONT_FACE = "Roboto Mono"
     FONT_SIZE_LG = 24
     FONT_SIZE_MD = 14
     FONT_SIZE_SM = 8
     TOP_TEXT_BOUNDING_RECT = QRectF(0, -25, RECT_WIDTH, 25)
 
-    LEVEL_OF_DETAIL_THRESHOLDS = (
-        0.35,
-        0.5,
-    )
+    LEVEL_OF_DETAIL_THRESHOLDS = (0.35, 0.5)
 
     RECT = QRectF(0, 0, RECT_WIDTH, RECT_WIDTH)
 
@@ -58,27 +41,27 @@ class Defaults:
         -OUTLINE_WIDTH / 2,
         -TOP_TEXT_BOUNDING_RECT.height(),
         RECT_WIDTH + OUTLINE_WIDTH,
-        OUTLINE_WIDTH / 2 + RECT_WIDTH + TOP_TEXT_BOUNDING_RECT.height()
+        OUTLINE_WIDTH / 2 + RECT_WIDTH + TOP_TEXT_BOUNDING_RECT.height(),
     )
     COLLISION_SHAPE = QRectF(
         -OUTLINE_WIDTH / 2,
         -OUTLINE_WIDTH / 2,
         OUTLINE_WIDTH + RECT_WIDTH,
-        OUTLINE_WIDTH + RECT_WIDTH
+        OUTLINE_WIDTH + RECT_WIDTH,
     )
     PEN = QPen(
         OUTLINE_COLOR,
         OUTLINE_WIDTH,
         style=Qt.SolidLine,
         cap=Qt.SquareCap,
-        join=Qt.MiterJoin
+        join=Qt.MiterJoin,
     )
     PEN_SELECTED = QPen(
         HIGHLIGHT_COLOR,
         OUTLINE_WIDTH,
         style=Qt.SolidLine,
         cap=Qt.SquareCap,
-        join=Qt.MiterJoin
+        join=Qt.MiterJoin,
     )
     BRUSH = QBrush(BACKGROUND_COLOR)
 
@@ -128,19 +111,19 @@ class ComponentView(QGraphicsItem):
         return path
 
     @overrides(QGraphicsItem)
-    def paint(self,
-              painter: QPainter,
-              option: QStyleOptionGraphicsItem,
-              widget: Optional[QWidget] = ...) -> None:
+    def paint(
+        self,
+        painter: QPainter,
+        option: QStyleOptionGraphicsItem,
+        widget: Optional[QWidget] = ...,
+    ) -> None:
         """
         Paint component
 
         Returns:
             None
         """
-        level_of_detail = option.levelOfDetailFromTransform(
-            painter.worldTransform()
-        )
+        level_of_detail = option.levelOfDetailFromTransform(painter.worldTransform())
 
         self._paint_rect(painter)
         self._paint_text(level_of_detail, painter)
@@ -150,17 +133,26 @@ class ComponentView(QGraphicsItem):
         for i in range(self._number_of_inputs):
             offset = (i + 1) * 25
             painter.drawLine(0, offset, -25, offset)
-            painter.drawEllipse(QPointF(-25, offset), Defaults.OUTLINE_WIDTH, Defaults.OUTLINE_WIDTH)
+            painter.drawEllipse(
+                QPointF(-25, offset), Defaults.OUTLINE_WIDTH, Defaults.OUTLINE_WIDTH
+            )
 
         for i in range(self._number_of_outputs):
             offset = (i + 1) * 25
-            painter.drawLine(Defaults.RECT_WIDTH, offset, Defaults.RECT_WIDTH + 25, offset)
-            painter.drawEllipse(QPointF(Defaults.RECT_WIDTH + 25, offset), Defaults.OUTLINE_WIDTH,
-                                Defaults.OUTLINE_WIDTH)
+            painter.drawLine(
+                Defaults.RECT_WIDTH, offset, Defaults.RECT_WIDTH + 25, offset
+            )
+            painter.drawEllipse(
+                QPointF(Defaults.RECT_WIDTH + 25, offset),
+                Defaults.OUTLINE_WIDTH,
+                Defaults.OUTLINE_WIDTH,
+            )
         # self.scene().update()
 
     @overrides(QGraphicsItem)
-    def itemChange(self, change: QGraphicsItem.GraphicsItemChange, value: Union[QPointF]) -> Any:
+    def itemChange(
+        self, change: QGraphicsItem.GraphicsItemChange, value: Union[QPointF]
+    ) -> Any:
         """
         Handle component's view changes. Snap to grid in case of item position change.
 
@@ -192,25 +184,18 @@ class ComponentView(QGraphicsItem):
             None
         """
         painter.setPen(self._highlightable_pen)
-        painter.setFont(Defaults.get_font(
-            Defaults.FONT_SIZE_MD
-            if level_of_detail > Defaults.LEVEL_OF_DETAIL_THRESHOLDS[0]
-            else Defaults.FONT_SIZE_LG
-        ))
-        painter.drawText(
-            Defaults.RECT,
-            Qt.AlignCenter,
-            'XNOR'
+        painter.setFont(
+            Defaults.get_font(
+                Defaults.FONT_SIZE_MD
+                if level_of_detail > Defaults.LEVEL_OF_DETAIL_THRESHOLDS[0]
+                else Defaults.FONT_SIZE_LG
+            )
         )
+        painter.drawText(Defaults.RECT, Qt.AlignCenter, "XNOR")
 
         if level_of_detail > Defaults.LEVEL_OF_DETAIL_THRESHOLDS[1]:
-            painter.setFont(Defaults.get_font(
-                Defaults.FONT_SIZE_SM
-            ))
-            painter.drawText(
-                Defaults.TOP_TEXT_BOUNDING_RECT,
-                Qt.AlignCenter, 'GATE #1'
-            )
+            painter.setFont(Defaults.get_font(Defaults.FONT_SIZE_SM))
+            painter.drawText(Defaults.TOP_TEXT_BOUNDING_RECT, Qt.AlignCenter, "GATE #1")
 
     def _paint_rect(self, painter: QPainter):
         """
@@ -234,8 +219,4 @@ class ComponentView(QGraphicsItem):
         Returns:
             Active pen
         """
-        return (
-            Defaults.PEN_SELECTED
-            if self.isSelected()
-            else Defaults.PEN
-        )
+        return Defaults.PEN_SELECTED if self.isSelected() else Defaults.PEN

@@ -1,12 +1,6 @@
-from PyQt5.QtCore import (
-    QObject,
-    QPointF,
-)
+from PyQt5.QtCore import QObject, QPointF
 from PyQt5.QtGui import QPen
-from PyQt5.QtWidgets import (
-    QGraphicsScene,
-    QStyleOptionGraphicsItem,
-)
+from PyQt5.QtWidgets import QGraphicsScene, QStyleOptionGraphicsItem
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt

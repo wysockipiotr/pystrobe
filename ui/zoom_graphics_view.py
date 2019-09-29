@@ -1,30 +1,11 @@
-from PyQt5.QtGui import (
-    QPen,
-    QBrush,
-    QColor,
-    QWheelEvent,
-    QPainter,
-)
-from PyQt5.QtWidgets import (
-    QGraphicsView,
-    QWidget,
-)
+from PyQt5.QtGui import QWheelEvent, QPainter
+from PyQt5.QtWidgets import QGraphicsView, QWidget
 from PyQt5.QtCore import Qt
 
-from PyQt5.QtCore import (
-    pyqtBoundSignal,
-    pyqtSlot as slot,
-)
+from PyQt5.QtCore import pyqtBoundSignal, pyqtSlot as slot
 from PyQt5.QtCore import QTimeLine
 
-from core import (
-    Scene,
-    ComponentView,
-)
-
-
-class Qwerty(QGraphicsView):
-    ...
+from core import Scene, ComponentView
 
 
 class ZoomGraphicsView(QGraphicsView):
@@ -67,12 +48,12 @@ class ZoomGraphicsView(QGraphicsView):
         else:
             super().wheelEvent(event)
 
-    @slot(float, name='scaling_step')
+    @slot(float, name="scaling_step")
     def scaling_step(self):
         factor = 1.0 + self.num_scheduled_steps / 300.0
         self.scale(factor, factor)
 
-    @slot(name='animation_finished')
+    @slot(name="animation_finished")
     def animation_finished(self):
         if self.num_scheduled_steps > 0:
             self.num_scheduled_steps -= 1
