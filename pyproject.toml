@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "pystrobe"
+version = "0.1.0"
+description = "Digital circuit simulator"
+authors = ["Piotr Wysocki <wysocki.py@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+PyQt5 = "^5.14.1"
+rx = "^3.0.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

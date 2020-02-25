@@ -2,14 +2,15 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections import namedtuple
-from typing import Iterable, Callable
 from functools import reduce
 from operator import and_
+from typing import Iterable, Callable
 
-from rx.subjects import BehaviorSubject
-from rx.concurrency.threadpoolscheduler import ThreadPoolScheduler
-from rx import combine_latest
 import rx.operators as rxop
+from PyQt5 import QtCore
+from rx import combine_latest
+from rx.scheduler.mainloop import QtScheduler
+from rx.subject import BehaviorSubject
 
 Connection = namedtuple("Connection", ("src", "src_port", "dst", "dst_port"))
 
@@ -29,7 +30,7 @@ class Component(ABC):
                     rxop.delay(0.5),
                     rxop.map(lambda vec: self.transfer_function_for(index)(vec)),
                     rxop.distinct_until_changed(),
-                ).subscribe(observer=output, scheduler=ThreadPoolScheduler())
+                ).subscribe(observer=output, scheduler=QtScheduler(QtCore))
             )
 
     @property

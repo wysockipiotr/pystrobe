@@ -1,13 +1,13 @@
 from typing import Optional, Any, Union
 
+from PyQt5.QtCore import QRectF, Qt, QPointF
+from PyQt5.QtGui import QPainter, QBrush, QPen, QColor, QFont, QPainterPath
 from PyQt5.QtWidgets import (
     QGraphicsItem,
     QStyleOptionGraphicsItem,
     QWidget,
     QApplication,
 )
-from PyQt5.QtCore import QRectF, Qt, QPointF
-from PyQt5.QtGui import QPainter, QBrush, QPen, QColor, QFont, QPainterPath
 
 from utils.decorators import overrides
 
